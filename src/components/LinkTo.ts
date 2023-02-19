@@ -1,3 +1,5 @@
+import {navigateTo} from "../utils";
+
 export class LinkTo extends HTMLElement {
 
   listenerCallback: (e: MouseEvent) => void
@@ -19,12 +21,13 @@ export class LinkTo extends HTMLElement {
   goToLink (route: string, e: MouseEvent) {
     e.preventDefault()
     window.dispatchEvent(new PopStateEvent('popstate', { state: { route } }))
+    navigateTo(route)
   }
 
   disconnectedCallback () {
     // FIXME: remove debugger and console.log
     debugger
-    console.log('A is', this.querySelector('a'))
+    console.log('A element is', this.querySelector('a'))
     this.querySelector('a')!.removeEventListener('click', this.listenerCallback)
   }
 }
