@@ -1,4 +1,5 @@
 import classes from './App.module.css'
+import '../components/LinkTo'
 
 const routes = [
   {
@@ -29,16 +30,36 @@ export class App extends HTMLElement {
   }
 
   render () {
+
+    history.pushState({ route: this.#startLocation }, '')
+
     const div = document.createElement('div')
     div.classList.add(classes.App)
-    div.insertAdjacentHTML('afterbegin', '<h1>Application</h1>')
+    // language=HTML
+    div.insertAdjacentHTML('afterbegin', `
+      <h1>Application</h1>
+      <a href="/settings">Settings</a>
+      <br />
+      <a href="/todos">Todos</a>
+      <p>Target Route: <span id="target-route">${this.#startLocation}</span></p>
+      <link-to to="/todos" data-text="Go to Todos"></link-to>
+      <br />
+      <link-to to="/settings" data-text="Go to Settings"></link-to>
+    `)
+
     this.appendChild(div)
     console.log('Render APP')
   }
 
   connectedCallback () {
+    console.log('CONNTECTED')
+    this.querySelector('a')!.addEventListener('click', e => {
+      console.log('Click', e)
+      e.preventDefault()
+    })
     window.addEventListener('popstate', this.navigate.bind(this))
-    window.dispatchEvent(new PopStateEvent('popstate', { state: { route: this.#startLocation } }))
+    // window.dispatchEvent(new PopStateEvent('popstate', { state: { route: this.#startLocation } }))
+    // window.dispatchEvent(new PopStateEvent('popstate', { state: { route: '/hello' } }))
   }
 
   disconnectedCallback () {
@@ -46,7 +67,13 @@ export class App extends HTMLElement {
   }
 
   navigate (event: PopStateEvent) {
-    console.log(event.state.route)
+    const targetRoute = event.state.route
+
+    if (history.state.route !== targetRoute) {
+      history.pushState({ route: targetRoute }, '', targetRoute)
+    }
+    document.querySelector('#target-route')!.textContent = targetRoute
+    console.log('NAVIGATION', event.state, history.state)
   }
 }
 
