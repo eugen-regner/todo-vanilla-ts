@@ -3,7 +3,7 @@ export function isObject (value: object) {
 }
 
 export function isEmptyObject (value: object) {
-  return !(isObject(value) && Object.keys(value).length > 0);
+  return !(isObject(value) && Object.keys(value).length > 0)
 }
 
 export function el (tag: string, attributes:{[key:string]: string}, ...children: (HTMLElement | string)[]) {

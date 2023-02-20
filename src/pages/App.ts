@@ -1,9 +1,8 @@
 import classes from './App.module.css'
 import '../components/LinkTo'
-import { navigateTo, normalizeRoute } from "../routes";
+import { navigateTo, normalizeRoute } from '../routes'
 
 export class App extends HTMLElement {
-
   #startLocation = window.location.pathname || '/'
 
   constructor () {
@@ -12,7 +11,6 @@ export class App extends HTMLElement {
   }
 
   render () {
-
     function onClick () {
       navigateTo('settings')
     }

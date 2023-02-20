@@ -10,7 +10,7 @@ const routes = [
   {
     path: '/settings',
     page: 'app-settings'
-  },
+  }
 ]
 
 export function navigateTo (route: string) {

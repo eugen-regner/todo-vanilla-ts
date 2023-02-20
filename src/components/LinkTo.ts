@@ -1,7 +1,6 @@
-import {navigateTo} from "../routes";
+import { navigateTo } from '../routes'
 
 export class LinkTo extends HTMLElement {
-
   listenerCallback: (e: MouseEvent) => void
 
   constructor () {
