@@ -1,4 +1,4 @@
-import {navigateTo} from "../route";
+import {navigateTo} from "../routes";
 
 export class LinkTo extends HTMLElement {
 

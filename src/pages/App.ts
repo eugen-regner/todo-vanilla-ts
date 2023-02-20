@@ -1,6 +1,6 @@
 import classes from './App.module.css'
 import '../components/LinkTo'
-import { navigateTo, normalizeRoute } from "../route";
+import { navigateTo, normalizeRoute } from "../routes";
 
 export class App extends HTMLElement {
 

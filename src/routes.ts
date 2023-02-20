@@ -17,8 +17,15 @@ export function navigateTo (route: string) {
   window.dispatchEvent(new PopStateEvent('popstate', { state: { route: normalizeRoute(route) } }))
 }
 
-export function normalizeRoute (route: string) {
-  route = route.trim()
-  if (route[0] !== '/') route += '/'
-  return route
+export function normalizeRoute (requestedRoute: string) {
+  requestedRoute = requestedRoute.trim()
+
+  if (requestedRoute[0] !== '/') requestedRoute += '/'
+
+  // TODO: fix unknown routes
+  if (!routes.find(knownRoute => knownRoute.path === requestedRoute)) {
+    requestedRoute = '/'
+  }
+
+  return requestedRoute
 }
