@@ -29,7 +29,3 @@ export function el (tag: string, attributes:{[key:string]: string}, ...children:
 
   return element
 }
-
-export function navigateTo (route: string) {
-  window.dispatchEvent(new PopStateEvent('popstate', { state: { route } }))
-}

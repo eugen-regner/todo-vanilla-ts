@@ -1,4 +1,4 @@
-import {navigateTo} from "../utils";
+import {navigateTo} from "../route";
 
 export class LinkTo extends HTMLElement {
 
@@ -7,12 +7,11 @@ export class LinkTo extends HTMLElement {
   constructor () {
     super()
 
-    const a = document.createElement('a')
-    a.textContent = this.getAttribute('data-text')
     const route = this.getAttribute('to')!
-
     this.listenerCallback = this.goToLink.bind(this, route)
 
+    const a = document.createElement('a')
+    a.textContent = this.getAttribute('data-text')
     a.setAttribute('href', route)
     a.addEventListener('click', this.listenerCallback)
     this.appendChild(a)
@@ -20,14 +19,10 @@ export class LinkTo extends HTMLElement {
 
   goToLink (route: string, e: MouseEvent) {
     e.preventDefault()
-    window.dispatchEvent(new PopStateEvent('popstate', { state: { route } }))
     navigateTo(route)
   }
 
   disconnectedCallback () {
-    // FIXME: remove debugger and console.log
-    debugger
-    console.log('A element is', this.querySelector('a'))
     this.querySelector('a')!.removeEventListener('click', this.listenerCallback)
   }
 }
