@@ -1,44 +1,47 @@
 import classes from './App.module.css'
 import '../components/LinkTo'
 import { navigateTo, normalizeRoute } from '../routes'
+import { CustomComponent } from '../components/CustomComponent'
 
-export class App extends HTMLElement {
-  #startLocation = window.location.pathname || '/'
+export class App extends CustomComponent {
+  private readonly startLocation = window.location.pathname || '/'
 
   constructor () {
     super()
-    this.render()
+    history.pushState({ route: this.startLocation }, '')
+
+    this.setState(() => ({
+      position: 'Engineer',
+      user: {
+        name: 'Eugen',
+        age: 47
+      },
+      route: this.startLocation
+    }))
   }
 
   render () {
-    function onClick () {
-      navigateTo('settings')
-    }
-
-    history.pushState({ route: this.#startLocation }, '')
-
     const div = document.createElement('div')
     div.classList.add(classes.App)
     // language=HTML
     div.insertAdjacentHTML('afterbegin', `
       <h1>Application</h1>
-      <p>Target Route: <span id="target-route">${history.state.route}</span></p>
+      <p>Init target route: <span id="target-route">${history.state.route}</span></p>
       <link-to to="/todos" data-text="Go to Todos"></link-to>
       <br />
       <link-to to="/settings" data-text="Go to Settings"></link-to>
-      <br />
-      <button type="button">go to settings</button>
     `)
 
-    div.querySelector('button')!.addEventListener('click', onClick)
-
-    this.appendChild(div)
     console.log('Render APP')
+    return div
   }
 
   connectedCallback () {
-    window.addEventListener('popstate', this.navigate)
-    navigateTo(this.#startLocation)
+    console.log('Connected App')
+
+    // FIXME: solve binding problem
+    window.addEventListener('popstate', this.navigate.bind(this))
+    navigateTo(this.startLocation)
   }
 
   disconnectedCallback () {
@@ -50,6 +53,7 @@ export class App extends HTMLElement {
 
     if (history.state.route !== targetRoute) {
       history.pushState({ route: targetRoute }, '', targetRoute)
+      this.setState((oldState) => ({ ...oldState, route: targetRoute }))
     }
   }
 }
