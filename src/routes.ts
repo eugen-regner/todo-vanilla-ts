@@ -13,6 +13,10 @@ const routes = [
   }
 ]
 
+export function getRoutesComponent (targetedRoute: string) {
+  return routes.find(route => normalizeRoute(targetedRoute) === route.path)
+}
+
 export function navigateTo (route: string) {
   window.dispatchEvent(new PopStateEvent('popstate', { state: { route: normalizeRoute(route) } }))
 }

@@ -1,23 +1,22 @@
 import classes from './App.module.css'
 import '../components/LinkTo'
-import { navigateTo, normalizeRoute } from '../routes'
+import { getRoutesComponent, navigateTo, normalizeRoute } from '../routes'
 import { StatefulComponent } from '../components/StatefulComponent'
+import './Settings'
+import './Todos'
 
 export class App extends StatefulComponent {
-  private readonly startLocation = window.location.pathname || '/'
+  private readonly startLocation = normalizeRoute(window.location.pathname)
 
   constructor () {
     super()
-    history.pushState({ route: this.startLocation }, '')
 
-    this.setState(() => ({
-      position: 'Engineer',
-      user: {
-        name: 'Eugen',
-        age: 47
-      },
-      route: this.startLocation
-    }))
+    this.setComponentsRoute(this.startLocation)
+
+    // handle init route
+    history.pushState({ route: this.startLocation }, '')
+    window.addEventListener('popstate', this.navigate.bind(this))
+    navigateTo(this.startLocation)
   }
 
   render () {
@@ -28,46 +27,28 @@ export class App extends StatefulComponent {
       <h1>Application</h1>
       <p>Init target route: <span id="target-route">${history.state.route}</span></p>
       <link-to to="/todos" data-text="Go to Todos"></link-to>
+      <${this.getState().component.page}></${this.getState().component.page}>
       <br />
       <link-to to="/settings" data-text="Go to Settings"></link-to>
-      <br />
-      <p>${this.getState().user.age}</p>
-      <button type="button">Increase</button>
     `)
-    div.querySelector('button')!.addEventListener('click', () => {
-      this.setState((oldState) => (
-        {
-          ...oldState,
-          user: {
-            // ...oldState.user,
-            age: oldState.user.age + 1
-          }
-        }
-      ))
-    })
 
-    console.log('Render APP')
+    console.log('Render APP', this.getState())
     return div
   }
 
-  connectedCallback () {
-    console.log('Connected App')
-
-    // FIXME: solve binding problem
-    window.addEventListener('popstate', this.navigate.bind(this))
-    navigateTo(this.startLocation)
+  private setComponentsRoute (targetRoute: string) {
+    this.setState(() => ({
+      route: targetRoute,
+      component: getRoutesComponent(targetRoute)
+    }))
   }
 
-  disconnectedCallback () {
-    window.removeEventListener('popstate', this.navigate)
-  }
-
-  navigate (event: PopStateEvent) {
+  private navigate (event: PopStateEvent) {
     const targetRoute = normalizeRoute(event.state.route)
 
     if (history.state.route !== targetRoute) {
       history.pushState({ route: targetRoute }, '', targetRoute)
-      this.setState((oldState) => ({ ...oldState, route: targetRoute }))
+      this.setComponentsRoute(targetRoute)
     }
   }
 }

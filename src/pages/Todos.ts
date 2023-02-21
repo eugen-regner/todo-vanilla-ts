@@ -9,7 +9,7 @@ export class Todos extends HTMLElement {
   render () {
     const div = document.createElement('div')
     div.classList.add(classes.Todos)
-    div.textContent = 'Todos'
+    div.innerHTML = '<h2>Todos</h2>'
     this.appendChild(div)
   }
 }
