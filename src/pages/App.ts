@@ -1,9 +1,9 @@
 import classes from './App.module.css'
 import '../components/LinkTo'
 import { navigateTo, normalizeRoute } from '../routes'
-import { CustomComponent } from '../components/CustomComponent'
+import { StatefulComponent } from '../components/StatefulComponent'
 
-export class App extends CustomComponent {
+export class App extends StatefulComponent {
   private readonly startLocation = window.location.pathname || '/'
 
   constructor () {

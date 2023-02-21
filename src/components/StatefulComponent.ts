@@ -1,13 +1,8 @@
 import { areDeepEqual } from '../utils'
 import { ObjectType } from '../types'
 
-export class CustomComponent extends HTMLElement {
+export class StatefulComponent extends HTMLElement {
   private state: ObjectType = {}
-
-  constructor () {
-    super()
-    this.doRender()
-  }
 
   private doRender () {
     this.replaceChildren(this.render())
@@ -22,7 +17,7 @@ export class CustomComponent extends HTMLElement {
   }
 
   protected setState (updater: (oldState: ObjectType) => ObjectType) {
-    const newState = updater(this.state)
+    const newState = updater(this.getState())
     if (!areDeepEqual(newState, this.state)) {
       this.state = newState
       this.doRender()
