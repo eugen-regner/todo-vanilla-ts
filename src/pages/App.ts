@@ -30,7 +30,21 @@ export class App extends StatefulComponent {
       <link-to to="/todos" data-text="Go to Todos"></link-to>
       <br />
       <link-to to="/settings" data-text="Go to Settings"></link-to>
+      <br />
+      <p>${this.getState().user.age}</p>
+      <button type="button">Increase</button>
     `)
+    div.querySelector('button')!.addEventListener('click', () => {
+      this.setState((oldState) => (
+        {
+          ...oldState,
+          user: {
+            // ...oldState.user,
+            age: oldState.user.age + 1
+          }
+        }
+      ))
+    })
 
     console.log('Render APP')
     return div
