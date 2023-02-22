@@ -1,35 +1,41 @@
+import { Settings } from './pages/Settings'
+import { Todos } from './pages/Todos'
+
 const routes = [
   {
     path: '/',
-    page: 'to-dos'
+    tag: 'to-dos',
+    component: Todos
   },
   {
     path: '/todos',
-    page: 'to-dos'
+    tag: 'to-dos',
+    component: Todos
   },
   {
     path: '/settings',
-    page: 'app-settings'
+    tag: 'app-settings',
+    component: Settings
   }
 ]
 
-export function getRoutesComponent (targetedRoute: string) {
-  return routes.find(route => normalizeRoute(targetedRoute) === route.path)
+export function getRoute (targetedPath: string) {
+  return routes.find(route => normalizePath(targetedPath) === route.path) || routes[0]
 }
 
-export function navigateTo (route: string) {
-  window.dispatchEvent(new PopStateEvent('popstate', { state: { route: normalizeRoute(route) } }))
+export function navigateTo (routePath: string) {
+  window.dispatchEvent(new PopStateEvent('popstate', { state: { route: normalizePath(routePath) } }))
 }
 
-export function normalizeRoute (requestedRoute: string) {
-  requestedRoute = requestedRoute.trim()
+export function normalizePath (requestedPath: string) {
+  requestedPath = requestedPath.trim()
 
-  if (requestedRoute[0] !== '/') requestedRoute = '/' + requestedRoute
+  if (requestedPath[0] !== '/') requestedPath = '/' + requestedPath
 
-  // TODO: fix unknown routes
-  if (!routes.find(knownRoute => knownRoute.path === requestedRoute)) {
-    requestedRoute = '/'
+  // TODO: fix unknown routes (404)
+  if (!routes.find(knownRoute => knownRoute.path === requestedPath)) {
+    requestedPath = '/'
   }
 
-  return requestedRoute
+  return requestedPath
 }
