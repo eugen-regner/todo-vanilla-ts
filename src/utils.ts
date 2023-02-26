@@ -1,7 +1,11 @@
 import { ObjectType } from './types'
 
-export function isObject (value: object) {
+export function isObject (value: ObjectType | unknown) {
   return Object.prototype.toString.call(value) === '[object Object]'
+}
+
+export function isEmptyObject (obj: ObjectType) {
+  return !(isObject(obj) && Object.keys(obj).length > 0)
 }
 
 export function areDeepEqual (object1: ObjectType, object2: ObjectType) {
@@ -14,22 +18,29 @@ export function areDeepEqual (object1: ObjectType, object2: ObjectType) {
     const value1 = object1[key]
     const value2 = object2[key]
 
-    const areObjects = isObject(value1) && isObject(value2)
-
-    if ((areObjects && !areDeepEqual(value1, value2)) ||
-      (!areObjects && value1 !== value2)
-    ) {
+    if (!areDeepEqual(value1, value2)) {
       return false
     }
   }
   return true
 }
 
-export function isEmptyObject (value: object) {
-  return !(isObject(value) && Object.keys(value).length > 0)
+export function merge (target: ObjectType, source: ObjectType): object {
+  function isDeep (prop: string) {
+    return isObject(source[prop]) && Object.hasOwn(target, prop) && isObject(target[prop])
+  }
+
+  const replaced = Object.getOwnPropertyNames(source)
+    .map(prop => ({ [prop]: isDeep(prop) ? merge(target[prop], source[prop]) : source[prop] }))
+    .reduce((a, b) => ({ ...a, ...b }), {})
+
+  return {
+    ...(target as object),
+    ...(replaced as object)
+  }
 }
 
-export function domEl (tag: string, attributes:{[key:string]: string}, ...children: (HTMLElement | string)[]) {
+export function domEl (tag: string, attributes: ObjectType, ...children: (HTMLElement | string)[]) {
   const element = document.createElement(tag)
 
   if (!isEmptyObject(attributes)) {

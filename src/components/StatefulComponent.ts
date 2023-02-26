@@ -1,11 +1,14 @@
 import { areDeepEqual } from '../utils'
 import { ObjectType } from '../types'
 
+type StateUpdater = (oldState: ObjectType) => ObjectType
+
 export class StatefulComponent extends HTMLElement {
   private state: ObjectType = {}
+  protected updateOnAttributeChange = false
 
-  private doRender () {
-    this.replaceChildren(this.render())
+  protected doRender (node?: Node) {
+    this.replaceChildren(node || this.render())
   }
 
   protected render () {
@@ -13,13 +16,20 @@ export class StatefulComponent extends HTMLElement {
   }
 
   protected getState () {
-    return structuredClone(this.state)
+    return structuredClone(this.state) as ObjectType
   }
 
-  protected setState (updater: (oldState: ObjectType) => ObjectType) {
-    const newState = updater(this.getState())
+  protected setState (updater: StateUpdater | ObjectType) {
+    const newState = typeof updater === 'function' ? updater(this.getState()) : updater
+
     if (!areDeepEqual(newState, this.state)) {
       this.state = newState
+      this.doRender()
+    }
+  }
+
+  attributeChangedCallback (_name: string, oldValue: string, newValue: string) {
+    if (this.updateOnAttributeChange && oldValue !== newValue) {
       this.doRender()
     }
   }

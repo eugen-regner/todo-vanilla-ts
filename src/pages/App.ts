@@ -2,6 +2,8 @@ import classes from './App.module.css'
 import '../components/LinkTo'
 import { getRoute, navigateTo, normalizePath } from '../routes'
 import { StatefulComponent } from '../components/StatefulComponent'
+import '../components/Header'
+import '../components/Footer'
 
 export class App extends StatefulComponent {
   private readonly startLocation = normalizePath(window.location.pathname)
@@ -21,16 +23,13 @@ export class App extends StatefulComponent {
     div.classList.add(classes.App)
     // language=HTML
     div.insertAdjacentHTML('afterbegin', `
-      <h1>Application</h1>
-      <p>Init target route: <span id="target-route">${history.state.path}</span></p>
-      <link-to to="/todos" data-text="Go to Todos"></link-to>
-
+      <app-header></app-header>
+      
       <!-- route's component -->
       <${routesComponent}></${routesComponent}>
       <!-- route's component -->
-
-      <br />
-      <link-to to="/settings" data-text="Go to Settings"></link-to>
+     
+      <app-footer></app-footer>
     `)
 
     return div
