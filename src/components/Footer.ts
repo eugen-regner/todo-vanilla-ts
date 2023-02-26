@@ -4,7 +4,6 @@ import { StatefulComponent } from './StatefulComponent'
 class Footer extends StatefulComponent {
   constructor () {
     super()
-    this.render()
     this.setState((oldState) => ({ ...oldState, name: 'Eugen' }))
   }
 

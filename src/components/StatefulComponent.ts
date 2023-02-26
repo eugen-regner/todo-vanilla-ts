@@ -5,6 +5,8 @@ type StateUpdater = (oldState: ObjectType) => ObjectType
 
 export class StatefulComponent extends HTMLElement {
   private state: ObjectType = {}
+  private stateIsInitialized = false
+
   protected updateOnAttributeChange = false
 
   protected doRender (node?: Node) {
@@ -22,7 +24,8 @@ export class StatefulComponent extends HTMLElement {
   protected setState (updater: StateUpdater | ObjectType) {
     const newState = typeof updater === 'function' ? updater(this.getState()) : updater
 
-    if (!areDeepEqual(newState, this.state)) {
+    if (!areDeepEqual(newState, this.state) || !this.stateIsInitialized) {
+      this.stateIsInitialized = true
       this.state = newState
       this.doRender()
     }
