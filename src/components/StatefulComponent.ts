@@ -11,13 +11,17 @@ export class StatefulComponent extends HTMLElement {
 
   protected doRender (node?: Node) {
     console.log('Render:', this.constructor.name)
-    this.replaceChildren(node || this.render())
+    this.replaceChildren(node || this.render() || this.renderMissingContent())
+  }
+
+  private renderMissingContent () {
+    const missingContent = document.createElement('h2')
+    missingContent.textContent = `<${this.constructor.name} />`
+    return missingContent
   }
 
   protected render (): Node {
-    const missingContent = document.createElement('h2')
-    missingContent.textContent = 'Missing Content'
-    return missingContent
+    return this.renderMissingContent()
   }
 
   protected getState () {
