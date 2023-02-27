@@ -1,39 +1,39 @@
-import classes from './App.module.css'
 import '../components/LinkTo'
 import { getRoute, navigateTo, normalizePath } from '../routes'
 import { StatefulComponent } from '../components/StatefulComponent'
 import '../components/Header'
 import '../components/Footer'
+import classes from './App.module.css'
 
 export class App extends StatefulComponent {
   private readonly startLocation = normalizePath(window.location.pathname)
 
   constructor () {
     super()
-
-    this.setComponentsRoute(this.startLocation)
-
     window.addEventListener('popstate', this.navigate.bind(this))
     navigateTo(this.startLocation)
-  }
 
-  render () {
-    // is being called on the state change (this.setComponentsRoute)
-    const { tag: routesComponent } = this.getState()
-    const div = document.createElement('div')
-    div.classList.add(classes.App)
+    this.classList.add(classes.WebApp)
     // language=HTML
-    div.insertAdjacentHTML('afterbegin', `
+    this.insertAdjacentHTML('afterbegin', `
       <app-header></app-header>
-      
-      <!-- route's component -->
-      <${routesComponent}></${routesComponent}>
-      <!-- route's component -->
-     
+      <main></main>
       <app-footer></app-footer>
     `)
 
-    return div
+    // routing (changes state -> re-rendering)
+    this.setComponentsRoute(this.startLocation)
+  }
+
+  render () {
+    const { tag } = this.getState()
+    const main = this.querySelector('main')!
+    main.replaceChildren()
+    // language=HTML
+    main.insertAdjacentHTML('afterbegin', `
+      <${tag}></${tag}>
+    `)
+    return this
   }
 
   private setComponentsRoute (targetPath: string) {

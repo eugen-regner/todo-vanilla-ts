@@ -1,4 +1,9 @@
-.App {
+.WebApp {
+  display: flex;
+  flex-direction: column;
   background: coral;
-  padding: 0 1rem 1rem 1rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
 }
