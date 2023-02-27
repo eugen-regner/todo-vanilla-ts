@@ -10,11 +10,14 @@ export class StatefulComponent extends HTMLElement {
   protected updateOnAttributeChange = false
 
   protected doRender (node?: Node) {
+    console.log('Render:', this.constructor.name)
     this.replaceChildren(node || this.render())
   }
 
-  protected render () {
-    return document.createElement('')
+  protected render (): Node {
+    const missingContent = document.createElement('h2')
+    missingContent.textContent = 'Missing Content'
+    return missingContent
   }
 
   protected getState () {

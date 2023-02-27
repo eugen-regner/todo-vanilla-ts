@@ -8,6 +8,8 @@ class Footer extends StatefulComponent {
   }
 
   render () {
+    console.log('Footer rendering')
+    // FIXME: replace div with footer
     const div = document.createElement('div')
     div.classList.add(classes.Footer)
     div.textContent = 'footer'
