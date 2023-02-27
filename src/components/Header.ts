@@ -8,7 +8,6 @@ class Header extends StatefulComponent {
   }
 
   render () {
-    console.log('Header rendering')
     // FIXME: replace div with header
     const div = document.createElement('div')
     div.setAttribute('class', classes.Header)

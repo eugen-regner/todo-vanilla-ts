@@ -18,7 +18,7 @@ export class App extends StatefulComponent {
   }
 
   render () {
-    console.log('Render:', this.constructor.name)
+    // is being called on the state change (this.setComponentsRoute)
     const { tag: routesComponent } = this.getState()
     const div = document.createElement('div')
     div.classList.add(classes.App)
