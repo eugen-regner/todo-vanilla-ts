@@ -1,16 +1,15 @@
 import classes from './Todos.module.css'
+import { StatefulComponent } from '../components/StatefulComponent'
 
-export class Todos extends HTMLElement {
+export class Todos extends StatefulComponent {
   constructor () {
     super()
-    this.render()
+    this.setState({})
   }
 
   render () {
-    const div = document.createElement('div')
-    div.classList.add(classes.Todos)
-    div.innerHTML = '<h2>Todos</h2>'
-    this.appendChild(div)
+    this.classList.add(classes.Todos)
+    this.innerHTML = '<h2>Todos</h2>'
   }
 }
 

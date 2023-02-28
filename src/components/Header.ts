@@ -8,11 +8,8 @@ class Header extends StatefulComponent {
   }
 
   render () {
-    // FIXME: replace div with header
-    const div = document.createElement('div')
-    div.setAttribute('class', classes.Header)
-    div.insertAdjacentText('afterbegin', 'Header')
-    return div
+    this.setAttribute('class', classes.Header)
+    this.insertAdjacentText('afterbegin', 'Header')
   }
 }
 

@@ -3,6 +3,7 @@ import { ObjectType } from '../types'
 
 type StateUpdater = (oldState: ObjectType) => ObjectType
 
+// provides structure for components' own state
 export class StatefulComponent extends HTMLElement {
   private state: ObjectType = {}
   private stateIsInitialized = false
@@ -10,7 +11,7 @@ export class StatefulComponent extends HTMLElement {
   protected updateOnAttributeChange = false
 
   protected doRender () {
-    console.log('Render:', this.constructor.name)
+    console.log('Render component:', this.constructor.name)
     const newNode = this.render()
 
     // if no node provided, the kid's render() method does the dom replacement on its own

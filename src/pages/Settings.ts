@@ -1,16 +1,15 @@
 import classes from './Settings.module.css'
+import { StatefulComponent } from '../components/StatefulComponent'
 
-export class Settings extends HTMLElement {
+export class Settings extends StatefulComponent {
   constructor () {
     super()
-    this.render()
+    this.setState({})
   }
 
   render () {
-    const div = document.createElement('div')
-    div.classList.add(classes.Settings)
-    div.innerHTML = '<h2>Settings</h2>'
-    this.appendChild(div)
+    this.classList.add(classes.Settings)
+    this.innerHTML = '<h2>Settings</h2>'
   }
 }
 
