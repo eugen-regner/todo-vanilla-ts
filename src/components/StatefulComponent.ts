@@ -10,24 +10,10 @@ export class StatefulComponent extends HTMLElement {
 
   protected updateOnAttributeChange = false
 
-  protected doRender () {
-    console.log('Render component:', this.constructor.name)
-    const newNode = this.render()
-
-    // if no node provided, the kid's render() method does the dom replacement on its own
-    if (newNode) {
-      this.replaceChildren(newNode)
-    }
-  }
-
-  private renderMissingContent () {
+  protected render (): Node | void {
     const missingContent = document.createElement('h2')
     missingContent.textContent = `<${this.constructor.name} />`
-    return missingContent
-  }
-
-  protected render (): Node | void {
-    return this.renderMissingContent()
+    this.replaceChildren(missingContent)
   }
 
   protected getState () {
@@ -40,13 +26,13 @@ export class StatefulComponent extends HTMLElement {
     if (!areDeepEqual(newState, this.state) || !this.stateIsInitialized) {
       this.stateIsInitialized = true
       this.state = newState
-      this.doRender()
+      this.render()
     }
   }
 
   attributeChangedCallback (_name: string, oldValue: string, newValue: string) {
     if (this.updateOnAttributeChange && oldValue !== newValue) {
-      this.doRender()
+      this.render()
     }
   }
 }
