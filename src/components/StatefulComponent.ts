@@ -9,9 +9,14 @@ export class StatefulComponent extends HTMLElement {
 
   protected updateOnAttributeChange = false
 
-  protected doRender (node?: Node) {
+  protected doRender () {
     console.log('Render:', this.constructor.name)
-    this.replaceChildren(node || this.render() || this.renderMissingContent())
+    const newNode = this.render()
+
+    // if no node provided, the kid's render() method does the dom replacement on its own
+    if (newNode) {
+      this.replaceChildren(newNode)
+    }
   }
 
   private renderMissingContent () {
@@ -20,7 +25,7 @@ export class StatefulComponent extends HTMLElement {
     return missingContent
   }
 
-  protected render (): Node {
+  protected render (): Node | void {
     return this.renderMissingContent()
   }
 

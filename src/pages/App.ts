@@ -11,9 +11,9 @@ export class App extends StatefulComponent {
   constructor () {
     super()
     window.addEventListener('popstate', this.navigate.bind(this))
-    navigateTo(this.startLocation)
 
     this.classList.add(classes.WebApp)
+
     // language=HTML
     this.insertAdjacentHTML('afterbegin', `
       <app-header></app-header>
@@ -21,19 +21,19 @@ export class App extends StatefulComponent {
       <app-footer></app-footer>
     `)
 
-    // routing (changes state -> re-rendering)
+    // routing (changing state -> re-rendering)
     this.setComponentsRoute(this.startLocation)
+    navigateTo(this.startLocation)
   }
 
   render () {
     const { tag } = this.getState()
     const main = this.querySelector('main')!
-    main.replaceChildren()
+    main.innerHTML = ''
     // language=HTML
     main.insertAdjacentHTML('afterbegin', `
       <${tag}></${tag}>
     `)
-    return this
   }
 
   private setComponentsRoute (targetPath: string) {
