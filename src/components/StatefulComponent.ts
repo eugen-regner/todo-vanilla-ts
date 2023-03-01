@@ -1,5 +1,5 @@
-import { areDeepEqual } from '../utils'
-import { ObjectType } from '../types'
+import { areDeepEqual } from '../lib/utils'
+import { ObjectType } from '../lib/types'
 
 type StateUpdater = (oldState: ObjectType) => ObjectType
 
