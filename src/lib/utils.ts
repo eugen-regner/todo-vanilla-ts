@@ -8,7 +8,41 @@ export function isEmptyObject (obj: ObjectType) {
   return !(isObject(obj) && Object.keys(obj).length > 0)
 }
 
-export function areDeepEqual (object1: ObjectType, object2: ObjectType) {
+export function areDeepEqual (a: any, b: any): boolean {
+  // shallow check
+  if (a === b) return true
+
+  // determining types
+  const typeA = Object.prototype.toString.call(a)
+  const typeB = Object.prototype.toString.call(b)
+
+  // if types are not equal
+  if (typeA !== typeB) return false
+
+  // comparing if object
+  if (typeA === '[object Object]') {
+    if (Object.keys(a) !== Object.keys(b)) return false
+    for (const key in a) { if (!areDeepEqual(a[key], b[key])) return false }
+    return true
+  } else if (typeA === '[object Array]') {
+    if (a.length !== b.length) return false
+    for (let i = 0; i < a.length; i++) { if (!areDeepEqual(a[i], b[i])) return false }
+    return true
+  } else if (typeA === '[object Map]') {
+    if (a.keys().length !== b.keys().length) return false
+    for (const key of a.keys()) { if (!areDeepEqual(a.get(key), b.get(key))) return false }
+    return true
+  } else if (typeA === '[object Set]') {
+    const x = [...a]
+    const y = [...b]
+    return areDeepEqual(x, y)
+  } else if (typeA === '[object Undefined]' || typeA === '[object Null]') { return true }
+
+  // nothing matched
+  return false
+}
+
+export function areDeepEqual2 (object1: ObjectType, object2: ObjectType) {
   const objKeys1 = Object.keys(object1)
   const objKeys2 = Object.keys(object2)
 
@@ -62,4 +96,11 @@ export function domEl (tag: string, attributes: ObjectType, ...children: (HTMLEl
   }
 
   return element
+}
+
+export function createUid () {
+  return String(
+    Date.now().toString(32) +
+    Math.random().toString(16)
+  ).replace(/\./g, '')
 }
