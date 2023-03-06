@@ -1,7 +1,6 @@
 import classes from './Todos.module.css'
 import { StatefulComponent } from '../components/StatefulComponent'
 import { createUid } from '../lib/utils'
-import { HTMLElementEvent } from '../lib/types'
 
 type ItemStatus = 'active' | 'completed'
 interface ItemType {
@@ -24,31 +23,28 @@ export class Todos extends StatefulComponent {
   connectedCallback () {
     this.setState(initState)
 
-    // @ts-ignore
-    this.querySelector('input')!.addEventListener('input', this.onInputChange.bind(this))
-    this.querySelector('input')!.addEventListener('keyup', this.onEnter.bind(this))
+    this.addEventListener('keyup', this.onEnter.bind(this))
+    addEventListener('load', () => {
+      this.querySelector('input')?.focus()
+    })
   }
 
   onEnter (e: KeyboardEvent) {
     if (e.key === 'Enter') {
-      // @ts-ignore
       this.setState(oldState => {
         const items = [...oldState.items, {
           id: createUid(),
-          // @ts-ignore
-          title: e.target.value,
+          title: (e.target as HTMLInputElement).value.trim(),
           status: 'active'
         }]
         return {
           ...oldState,
           items
         }
-      })
-    }
-  }
+      });
 
-  onInputChange (e: HTMLElementEvent<HTMLInputElement>) {
-    console.log('input change', this.getState(), e.target.value)
+      (this.querySelector('input[name="new-todo-item"]') as HTMLElement).focus()
+    }
   }
 
   render () {
@@ -61,7 +57,7 @@ export class Todos extends StatefulComponent {
     // input
     const input = document.createElement('input')
     input.setAttribute('type', 'text')
-    input.setAttribute('name', 'todo-item')
+    input.setAttribute('name', 'new-todo-item')
 
     // list of items
     const ul = document.createElement('ul')

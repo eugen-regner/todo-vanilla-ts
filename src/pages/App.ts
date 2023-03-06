@@ -15,11 +15,21 @@ export class App extends StatefulComponent {
     this.classList.add(classes.WebApp)
 
     // language=HTML
-    this.insertAdjacentHTML('afterbegin', `
+    this.insertAdjacentHTML('afterbegin', /* html */`
+      <div class="parentDiv">
+        parentDiv
+        <div>
+          childDiv
+        </div>
+      </div>
       <app-header></app-header>
       <main></main>
       <app-footer></app-footer>
     `)
+
+    this.querySelector('.parentDiv')!.addEventListener('click', e => {
+      console.log(e.currentTarget, e.target)
+    })
 
     // routing (changing state -> re-rendering)
     this.setComponentsRoute(this.startLocation)
@@ -31,7 +41,7 @@ export class App extends StatefulComponent {
     const main = this.querySelector('main')!
     main.innerHTML = ''
     // language=HTML
-    main.insertAdjacentHTML('afterbegin', `
+    main.insertAdjacentHTML('afterbegin', /* html */`
       <${tag}></${tag}>
     `)
   }
