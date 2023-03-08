@@ -16,20 +16,10 @@ export class App extends StatefulComponent {
 
     // language=HTML
     this.insertAdjacentHTML('afterbegin', /* html */`
-      <div class="parentDiv">
-        parentDiv
-        <div>
-          childDiv
-        </div>
-      </div>
       <app-header></app-header>
       <main></main>
       <app-footer></app-footer>
     `)
-
-    this.querySelector('.parentDiv')!.addEventListener('click', e => {
-      console.log(e.currentTarget, e.target)
-    })
 
     // routing (changing state -> re-rendering)
     this.setComponentsRoute(this.startLocation)

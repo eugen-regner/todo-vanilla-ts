@@ -1,12 +1,29 @@
-import { ObjectType } from '../lib/types'
+import { Listener, ObjectType } from '../lib/types'
 import { areDeepEqual } from '../lib/utils'
+import { Observable } from '../lib/Observable'
 
 type StateUpdater = (oldState: ObjectType) => ObjectType
 
 // provides structure for components' own state
 export class StatefulComponent extends HTMLElement {
-  private state: ObjectType = {}
-  private stateIsInitialized = false
+  // global state
+  private static globalObservable = new Observable()
+
+  protected subscribe (key: string, listener: Listener) {
+    StatefulComponent.globalObservable.subscribe(key, listener)
+  }
+
+  protected unsubscribe (key: string, listener: Listener) {
+    StatefulComponent.globalObservable.unsubscribe(key, listener)
+  }
+
+  protected notify (key: string, data?: unknown) {
+    StatefulComponent.globalObservable.notify(key, data)
+  }
+
+  // local state
+  private localState: ObjectType = {}
+  private localStateIsInitialized = false
 
   protected updateOnAttributeChange = false
 
@@ -17,15 +34,15 @@ export class StatefulComponent extends HTMLElement {
   }
 
   protected getState () {
-    return structuredClone(this.state) as ObjectType
+    return structuredClone(this.localState) as ObjectType
   }
 
   protected setState (updater: StateUpdater | ObjectType) {
     const newState = typeof updater === 'function' ? updater(this.getState()) : updater
 
-    if (!areDeepEqual(newState, this.state) || !this.stateIsInitialized) {
-      this.stateIsInitialized = true
-      this.state = newState
+    if (!areDeepEqual(newState, this.localState) || !this.localStateIsInitialized) {
+      this.localStateIsInitialized = true
+      this.localState = newState
       this.render()
     }
   }
