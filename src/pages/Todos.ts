@@ -29,33 +29,42 @@ export class Todos extends StatefulComponent {
     this.setState(initState)
 
     this.addEventListener('keyup', this.onEnter.bind(this))
+
     addEventListener('load', () => {
       this.querySelector('input')?.focus()
     })
 
+    // show only active items
     this.subscribe('select-active', () => {
-      this.setState(oldState => {
-        return {
-          ...oldState,
-          itemsToShow: this.getItemsByStatus('active', oldState.items)
-        }
-      })
+      this.setState(oldState => ({
+        ...oldState,
+        itemsToShow: this.getItemsByStatus('active', oldState.items)
+      }))
     })
 
+    // show only completed items
     this.subscribe('select-completed', () => {
-      this.setState(oldState => {
-        return {
-          ...oldState,
-          itemsToShow: this.getItemsByStatus('completed', oldState.items)
-        }
-      })
+      this.setState(oldState => ({
+        ...oldState,
+        itemsToShow: this.getItemsByStatus('completed', oldState.items)
+      }))
     })
 
+    // show all items
     this.subscribe('select-all', () => {
+      this.setState(oldState => ({
+        ...oldState,
+        itemsToShow: oldState.items
+      }))
+    })
+
+    // remove completed items and never show them again
+    this.subscribe('clear-completed', () => {
       this.setState(oldState => {
         return {
           ...oldState,
-          itemsToShow: oldState.items
+          items: oldState.items.filter((item: ItemType) => item.status !== 'completed'),
+          itemsToShow: oldState.itemsToShow.filter((item: ItemType) => item.status !== 'completed')
         }
       })
     })
