@@ -4,6 +4,9 @@ export class Observable {
   private listeners: Listeners = {}
 
   subscribe (key: string, listener: Listener) {
+    if (!this.listeners[key]) {
+      this.listeners[key] = []
+    }
     this.listeners[key].push(listener)
   }
 

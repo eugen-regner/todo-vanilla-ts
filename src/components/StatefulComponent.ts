@@ -18,6 +18,7 @@ export class StatefulComponent extends HTMLElement {
   }
 
   protected notify (key: string, data?: unknown) {
+    console.log('Notify:', key, data)
     StatefulComponent.globalObservable.notify(key, data)
   }
 

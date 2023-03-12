@@ -1,3 +1,23 @@
 .StatusSelector {
-  background: ghostwhite;
+  display: flex;
+}
+
+.StatusSelector button {
+  cursor: pointer;
+}
+
+.StatusSelector .all {
+
+}
+
+.StatusSelector .active {
+
+}
+
+.StatusSelector .completed {
+
+}
+
+.StatusSelector .clearCompleted {
+
 }
