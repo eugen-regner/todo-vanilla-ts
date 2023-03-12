@@ -11,16 +11,14 @@ interface ItemType {
 }
 interface StateType {
   items: ItemType[],
-  itemsToShow: ItemType[]
+  itemsToShow: ItemType[],
+  showByStatus: SelectedItemTypes
 }
 
 const initState: StateType = {
-  items: [
-    { id: createUid(), title: 'Clean up', status: 'active' },
-    { id: createUid(), title: 'Vacuum clean', status: 'active' },
-    { id: createUid(), title: 'Cook some food', status: 'completed' }
-  ],
-  itemsToShow: []
+  items: [],
+  itemsToShow: [],
+  showByStatus: 'all'
 }
 
 export class Todos extends StatefulComponent {
@@ -38,7 +36,8 @@ export class Todos extends StatefulComponent {
     this.subscribe('select-active', () => {
       this.setState(oldState => ({
         ...oldState,
-        itemsToShow: this.getItemsByStatus('active', oldState.items)
+        itemsToShow: this.getItemsByStatus('active', oldState.items),
+        showByStatus: 'active'
       }))
     })
 
@@ -46,7 +45,8 @@ export class Todos extends StatefulComponent {
     this.subscribe('select-completed', () => {
       this.setState(oldState => ({
         ...oldState,
-        itemsToShow: this.getItemsByStatus('completed', oldState.items)
+        itemsToShow: this.getItemsByStatus('completed', oldState.items),
+        showByStatus: 'completed'
       }))
     })
 
@@ -54,7 +54,8 @@ export class Todos extends StatefulComponent {
     this.subscribe('select-all', () => {
       this.setState(oldState => ({
         ...oldState,
-        itemsToShow: oldState.items
+        itemsToShow: oldState.items,
+        showByStatus: 'all'
       }))
     })
 
@@ -71,26 +72,30 @@ export class Todos extends StatefulComponent {
   }
 
   getItemsByStatus (status: SelectedItemTypes, items: ItemType[]) {
+    if (status === 'all') return items
     return items.filter((item: ItemType) => item.status === status)
   }
 
   onEnter (e: KeyboardEvent) {
     if (e.key === 'Enter') {
-      this.setState(oldState => {
-        const items = [...oldState.items, {
-          id: createUid(),
-          title: (e.target as HTMLInputElement).value.trim(),
-          status: 'active'
-        }]
+      const fieldValue = (e.target as HTMLInputElement).value.trim()
+      if (fieldValue) {
+        this.setState(oldState => {
+          const items = [...oldState.items, {
+            id: createUid(),
+            title: fieldValue,
+            status: 'active'
+          }]
 
-        return {
-          ...oldState,
-          items
-        }
-      })
+          return {
+            ...oldState,
+            items,
+            itemsToShow: this.getItemsByStatus(oldState.showByStatus, items)
+          }
+        })
 
-      this.notify('add-item', this.getState().items);
-
+        this.notify('add-item', this.getState().items)
+      }
       (this.querySelector('input[name="new-todo-item"]') as HTMLElement).focus()
     }
   }
