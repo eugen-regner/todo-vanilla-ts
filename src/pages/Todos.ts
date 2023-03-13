@@ -1,6 +1,6 @@
 import classes from './Todos.module.css'
 import { StatefulComponent } from '../components/StatefulComponent'
-import { createUid } from '../lib/utils'
+import { createUuid } from '../lib/utils'
 import { ItemStatus, SelectedItemTypes } from '../lib/types'
 import '../components/StatusSelector'
 
@@ -82,7 +82,7 @@ export class Todos extends StatefulComponent {
       if (fieldValue) {
         this.setState(oldState => {
           const items = [...oldState.items, {
-            id: createUid(),
+            id: createUuid(),
             title: fieldValue,
             status: 'active'
           }]
